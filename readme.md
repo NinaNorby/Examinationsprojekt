@@ -1,1 +1,3 @@
-#Examinationsuppgift för javascript 2
+# Examinationsuppgift för javascript 2
+
+**Logga**:
