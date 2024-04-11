@@ -1,11 +1,156 @@
 //Variabler
-$backroundColor: rgb(180, 180, 180);
-$fontfamily:"Poppins", sans-serif;
+//Colors
+$backroundColor: #3c5aa6;
+$headerFontColor: #ffcb05;
+$BGDropDownMenu: #4574eb;
+$BGColorHoverDropDownMenu: #356af1;
+$bgColorCompareBtn: #ffcd05a1;
+$bgColorHoverCompareBtn: #ffcb05;
+$bgColorComparementDiv: #4574eb;
 
+//Box Shadow drop down lista
+$BoxShadowHoverMenu: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+//Box Shadow drop down lista
+$BoxShadowHoverComparementBtn: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
-body{
-background-color: $backroundColor;
-font-family: $fontfamily;
+//Font Fam.
+$fontfamily: "Poppins", sans-serif;
 
+//Borderradius
+$borderRadiusSelectedPokemon: 4px;
+$borderRadiusDropDown: 4px;
+$borderRadiusComparementDiv: 4px;
 
+//Fontsize &weight 
+$fontSizeDropDownList: 1rem;
+$fontSizeHeader: 2rem;
+$fontSizeComparementBtn: 1rem;
+
+$fontWeightComparementBtn: 600;
+$fontWeightComparementP: 600;
+$fontWeightHoverComparementBtn: 700;
+
+// --SLUT PÅ VARIABLER --
+
+//Inuti denna finns en img som kommer att centreras
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-bottom: 3rem;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  background-color: $backroundColor;
+  font-family: $fontfamily;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+
+  h1 {
+    color: $headerFontColor;
+    font-size: $fontSizeHeader;
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  //ContainerWrapper wrappar containerDropDown1 , containerDropDown2 och comparementContainer
+  #containerWrapper {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+  }
+  // background-color: rgb(95, 17, 105); //ENDAST TEST !
+}
+
+//DropDownContainer 1 och DropDownContainer 2
+
+#containerDropDown1,
+#containerDropDown2 {
+  // background-color: #ff0000; //Ska tas bort sen
+  margin: 0 10px;
+  //Dropdownlistan
+  #pokemon1,
+  #pokemon2 {
+    font-size: $fontSizeDropDownList;
+    background-color: $BGDropDownMenu;
+    color: white;
+    padding: 16px;
+    border: none;
+    border-radius: $borderRadiusDropDown;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $BGColorHoverDropDownMenu;
+      box-shadow: $BoxShadowHoverMenu;
+
+    }
+  }
+  #selectedPokemon1,
+  #selectedPokemon2 {
+    background-color: #4574eb;
+    border-radius: $borderRadiusSelectedPokemon;
+
+    ul {
+      list-style-type: none;
+    }
+  }
+}
+
+// container för compartment med knapp samt jämfäörelsedata
+#comparementContainer {
+  // background-color: #2f00ff;
+
+  button {
+    justify-content: center;
+    background-color: $bgColorCompareBtn;
+    font-weight: $fontWeightComparementBtn;
+    text-align: center;
+    font-family: $fontfamily;
+    font-size: $fontSizeComparementBtn;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    border: none;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+
+    //När knappen klickas på /aktiveras 
+    &:active {
+      background-color: $bgColorHoverCompareBtn;
+      font-weight: $fontWeightHoverComparementBtn;
+      box-shadow: $BoxShadowHoverComparementBtn;
+    }
+  }
+  //För att se till så att span fortsötter att vara grön
+  #comparementContainer span {
+    color:rgb(10, 233, 10)
+  }
+
+  #comparementstats {
+    border-radius: $borderRadiusComparementDiv;
+    background-color: $bgColorComparementDiv;
+
+    p {
+      font-weight: $fontWeightComparementP;
+      margin: 10px;
+    }
+  }
+  img {
+    border-radius: 50%;
+    background-color: #ffcb05;
+  }
 }
