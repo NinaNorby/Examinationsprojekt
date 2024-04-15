@@ -14,7 +14,8 @@ $BoxShadowHoverMenu: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 $BoxShadowHoverComparementBtn: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
 //Font Fam.
-$fontfamily: "Poppins", sans-serif;
+$fontfamilyPressStart: "Press Start 2P", system-ui;
+$fontfamilyStandard: "Poppins";
 
 //Borderradius
 $borderRadiusSelectedPokemon: 4px;
@@ -29,6 +30,7 @@ $fontSizeComparementBtn: 1rem;
 $fontWeightComparementBtn: 600;
 $fontWeightComparementP: 600;
 $fontWeightHoverComparementBtn: 700;
+
 
 // --SLUT PÅ VARIABLER --
 
@@ -45,7 +47,7 @@ body {
   width: 100%;
   height: 100vh;
   background-color: $backroundColor;
-  font-family: $fontfamily;
+  font-family: $fontfamilyStandard;
   color: white;
   display: flex;
   flex-direction: row;
@@ -110,14 +112,22 @@ body {
 
 // container för compartment med knapp samt jämfäörelsedata
 #comparementContainer {
+
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  
+
+
   // background-color: #2f00ff;
+  
 
   button {
     justify-content: center;
     background-color: $bgColorCompareBtn;
     font-weight: $fontWeightComparementBtn;
     text-align: center;
-    font-family: $fontfamily;
+    // font-family: $fontfamilyPressStart;
     font-size: $fontSizeComparementBtn;
     cursor: pointer;
     justify-content: center;
@@ -127,6 +137,8 @@ body {
     width: 150px;
     height: 150px;
     border-radius: 50%;
+
+    
 
     //När knappen klickas på /aktiveras 
     &:active {
@@ -143,8 +155,10 @@ body {
   #comparementstats {
     border-radius: $borderRadiusComparementDiv;
     background-color: $bgColorComparementDiv;
+    margin-top: 25px;
 
-    p {
+    p{
+  
       font-weight: $fontWeightComparementP;
       margin: 10px;
     }
@@ -152,5 +166,40 @@ body {
   img {
     border-radius: 50%;
     background-color: #ffcb05;
+    margin-bottom: 25px;
   }
 }
+#fightWrapper{
+  background-color: #5a5850;
+  display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	align-items: center;
+	align-content: center;
+  
+
+  #fightP1Container{
+    background-color: #4574eb;
+  
+  }
+  #fightP2Container{
+    background-color: #eb5845;
+  
+  }
+}
+#fightBtnWrapper{
+background-color: orange;
+display: flex;
+flex-direction: column;
+flex-wrap: nowrap;
+justify-content: center;
+align-items: center;
+align-content: center;
+
+}
+
+
+
+
+
