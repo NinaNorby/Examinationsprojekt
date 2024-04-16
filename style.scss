@@ -22,7 +22,7 @@ $borderRadiusSelectedPokemon: 4px;
 $borderRadiusDropDown: 4px;
 $borderRadiusComparementDiv: 4px;
 
-//Fontsize &weight 
+//Fontsize &weight
 $fontSizeDropDownList: 1rem;
 $fontSizeHeader: 2rem;
 $fontSizeComparementBtn: 1rem;
@@ -30,7 +30,6 @@ $fontSizeComparementBtn: 1rem;
 $fontWeightComparementBtn: 600;
 $fontWeightComparementP: 600;
 $fontWeightHoverComparementBtn: 700;
-
 
 // --SLUT PÅ VARIABLER --
 
@@ -73,14 +72,12 @@ body {
     align-items: center;
     align-content: center;
   }
-  // background-color: rgb(95, 17, 105); //ENDAST TEST !
 }
 
 //DropDownContainer 1 och DropDownContainer 2
 
 #containerDropDown1,
 #containerDropDown2 {
-  // background-color: #ff0000; //Ska tas bort sen
   margin: 0 10px;
   //Dropdownlistan
   #pokemon1,
@@ -96,7 +93,6 @@ body {
     &:hover {
       background-color: $BGColorHoverDropDownMenu;
       box-shadow: $BoxShadowHoverMenu;
-
     }
   }
   #selectedPokemon1,
@@ -114,73 +110,60 @@ body {
 #comparementContainer {
   display: flex;
   flex-direction: column;
-  align-items: center; 
-
+  align-items: center;
 }
-  button#fightBtn {
-    margin-left: 10px
-  }
-  button {
-    background-color: $bgColorCompareBtn;
-    font-weight: $fontWeightComparementBtn;
-    text-align: center;
-    font-size: $fontSizeComparementBtn;
-    cursor: pointer;
-    border: none;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
 
-    //När knappen klickas på /aktiveras 
-    &:active {
-      background-color: $bgColorHoverCompareBtn;
-      font-weight: $fontWeightHoverComparementBtn;
-      box-shadow: $BoxShadowHoverComparementBtn;
-    
+button {
+  background-color: $bgColorCompareBtn;
+  font-weight: $fontWeightComparementBtn;
+  text-align: center;
+  font-size: $fontSizeComparementBtn;
+  cursor: pointer;
+  border: none;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin: 10px;
+  //När knappen klickas på /aktiveras
+  &:active {
+    background-color: $bgColorHoverCompareBtn;
+    font-weight: $fontWeightHoverComparementBtn;
+    box-shadow: $BoxShadowHoverComparementBtn;
   }
+}
+//För att se till så att span fortsötter att vara grön
+span {
+  color: rgb(10, 233, 10);
+}
 
+#comparementstats {
+  border-radius: $borderRadiusComparementDiv;
+  background-color: $bgColorComparementDiv;
+  margin-top: 25px;
+
+  p {
+    font-weight: $fontWeightComparementP;
+    margin: 10px;
   }
-  //För att se till så att span fortsötter att vara grön
-  span {
-    color:rgb(10, 233, 10)
-  }
+}
 
-  #comparementstats {
-    border-radius: $borderRadiusComparementDiv;
-    background-color: $bgColorComparementDiv;
-    margin-top: 25px;
+img {
+  margin-bottom: 25px;
+}
 
-    p{
-      font-weight: $fontWeightComparementP;
-      margin: 10px;
-    }
-  }
-
-  img {
-    margin-bottom: 25px;
-  }
-
-#fightWrapper{
-  background-color: #5a5850;
+#fightWrapper {
+  // background-color: #5a5850;
   display: flex;
-	flex-direction: row;
-	flex-wrap: nowrap;
-	justify-content: space-between;
-	align-items: center;
-	align-content: center;
-  
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
 
-  #fightP1Container{
+  #fightP1Container {
     background-color: #4574eb;
-  
   }
-  #fightP2Container{
+  #fightP2Container {
     background-color: #eb5845;
-  
   }
 }
-
-
-
-
-

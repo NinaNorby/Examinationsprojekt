@@ -77,10 +77,6 @@ body #containerWrapper {
   align-items: center;
 }
 
-button#fightBtn {
-  margin-left: 10px;
-}
-
 button {
   background-color: rgba(255, 205, 5, 0.631372549);
   font-weight: 600;
@@ -91,6 +87,7 @@ button {
   width: 150px;
   height: 150px;
   border-radius: 50%;
+  margin: 10px;
 }
 button:active {
   background-color: #ffcb05;
@@ -117,7 +114,6 @@ img {
 }
 
 #fightWrapper {
-  background-color: #5a5850;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;

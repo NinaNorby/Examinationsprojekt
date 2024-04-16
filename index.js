@@ -39,7 +39,7 @@ class Pokemon {
         if (this.stats.hp < 0) {
             this.stats.hp = 0; // Sätter HP till 0 om det blir minus
         }
-    }   
+    }
 }
 
 
@@ -302,7 +302,7 @@ new PokemonCreator().createPokemonList().then(pokemonList => {
         const selectedPokemon2Name = document.getElementById("pokemon2").value;
 
         if (!selectedPokemon1Name || !selectedPokemon2Name) {
-            alert("Please select both Pokémon before starting the fight.");
+            alert("Please select both Pokémon before starting the battle.");
             return;
         }
 
@@ -315,17 +315,33 @@ new PokemonCreator().createPokemonList().then(pokemonList => {
     });
 
 
-    function startFight(pokemon1, pokemon2) {
-
-        
-        // console.log(pokemon1);
-        // console.log(pokemon2);
-
-        let turnController = new FightTurns(pokemon1, pokemon2);
 
 
-        // Loop för att simulera strid tills en Pokémon är besegrad
-        while (pokemon1.stats.hp > 0 && pokemon2.stats.hp > 0) {
+// Funktion för att skriva in hur det går i kampen , texten kommer att läggas in i fightMessageContainer 
+function updateFightMessage(attackingPokemon, defendingPokemon, damage) {
+    // Lägger till en <p> i fightmessageContainer 
+    const paragraph = document.createElement('p');
+
+    // skapar en sträng som skriver ut en attack . vem som använde vad  
+    const message = `${attackingPokemon.name} used ${attackingPokemon.primaryAttack} and did ${damage} in damage. ${defendingPokemon.name +"s"} remaining HP is : ${defendingPokemon.stats.hp}.`;
+
+    // Sätter texten i paragraph till message 
+    paragraph.textContent = message;
+
+    // Hämtar container för meddelande
+    const fightMessageContainer = document.getElementById('fightMessageContainer');
+
+    // appendar paragraph elementet i container för meddelandet
+    fightMessageContainer.appendChild(paragraph);
+}
+
+// logiken för fight
+function startFight(pokemon1, pokemon2) {
+    let turnController = new FightTurns(pokemon1, pokemon2);
+
+    // Sätter en interval på var 10e sekund
+    let fightInterval = setInterval(() => {
+        if (pokemon1.stats.hp > 0 && pokemon2.stats.hp > 0) {
             let attackingPokemon = turnController.whoIsAttacking();
             let defendingPokemon = turnController.whoIsDefending();
 
@@ -335,14 +351,20 @@ new PokemonCreator().createPokemonList().then(pokemonList => {
             }
             defendingPokemon.takeDamage(damage);
 
+            // Uppdaterar meddelandet om kampen/fighten 
+            updateFightMessage(attackingPokemon, defendingPokemon, damage);
+
             if (defendingPokemon.stats.hp === 0) {
-                document.getElementById("fightMessage").innerText = `${defendingPokemon.name} is defeated! ${attackingPokemon.name} wins!`;
-                break;
+                let fightMessageElement = document.getElementById("fightMessage");
+                fightMessageElement.innerHTML = `${defendingPokemon.name} is defeated!<br><strong>${attackingPokemon.name} wins!<strong> <br> <img src="${attackingPokemon.image}" alt="${attackingPokemon.name}">`;
+                clearInterval(fightInterval); // Stoppa intervallet på 10 sek när striden är över
+                return;
             } else {
                 turnController.changeTurn();
             }
         }
-    }
+    }, 2000); // ÄNDRA TILL 10000
+}
 
 
     //Denna funktion kommer att jämföra 2 pokemon mot varandra . Den pokemons vars värde är bättre än den andras kommer att bli grön. Därefter kommer en vinnare att visas.  
@@ -383,19 +405,14 @@ new PokemonCreator().createPokemonList().then(pokemonList => {
     //Skapar fightp1container  som är barn till fightWrapper 
     let fightP1Container = document.createElement('div');
     fightP1Container.id = "fightP1Container";
+    fightP1Container.innerHTML = "fightP1Container";
     fightWrapper.appendChild(fightP1Container);
 
-
-    //Lägger en div (img ska läggas in) som blir barn till fightp1container 
-    let fightp1Img = document.createElement('div');
-    fightp1Img.id = "fightp1Img";
-    fightp1Img.innerHTML = '1:1'
-    fightP1Container.appendChild(fightp1Img);
 
     //Lägger en div (text  ska läggas in) som blir barn till fightp1container 
     let fightP1HP = document.createElement('div');
     fightP1HP.id = "fightP1HP";
-    fightP1HP.innerHTML = '1:1:1'
+    fightP1HP.innerHTML = 'fightP1HP'
     fightP1Container.appendChild(fightP1HP);
 
 
@@ -409,37 +426,24 @@ new PokemonCreator().createPokemonList().then(pokemonList => {
 
     let fightMessage = document.createElement('div');
     fightMessage.id = "fightMessage";
-    fightMessage.innerHTML = 'fightMessage'
+    // fightMessage.innerHTML = '';
     fightMessageContainer.appendChild(fightMessage);
-
-
 
 
 
     //Skapar fightp2container  som är barn till fightWrapper 
     let fightP2Container = document.createElement('div');
     fightP2Container.id = "fightP2Container";
+    fightP2Container.innerHTML = "fightP2Container";
     fightWrapper.appendChild(fightP2Container);
 
 
-    //Lägger en div (img ska läggas in) som blir barn till fightp2container 
-    let fightP2Img = document.createElement('div');
-    fightP2Img.id = "fightp1Img";
-    fightP2Img.innerHTML = '2:2'
-    fightP2Container.appendChild(fightP2Img);
 
     //Lägger en div (text  ska läggas in) som blir barn till fightp2container 
     let fightP2HP = document.createElement('div');
     fightP2HP.id = "fightP2HP";
-    fightP2HP.innerHTML = '2:2:2'
+    fightP2HP.innerHTML = "fightP2HP";
     fightP2Container.appendChild(fightP2HP);
 
 
-
-
-
-    // document.getElementById("fightBtn").addEventListener("click", Fight(selectedPokemon1, selectedPokemon2));
-    ;
 });
-
-
