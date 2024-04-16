@@ -112,43 +112,36 @@ body {
 
 // container för compartment med knapp samt jämfäörelsedata
 #comparementContainer {
-
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   align-items: center; 
-  
 
-
-  // background-color: #2f00ff;
-  
-
+}
+  button#fightBtn {
+    margin-left: 10px
+  }
   button {
-    justify-content: center;
     background-color: $bgColorCompareBtn;
     font-weight: $fontWeightComparementBtn;
     text-align: center;
-    // font-family: $fontfamilyPressStart;
     font-size: $fontSizeComparementBtn;
     cursor: pointer;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
     border: none;
     width: 150px;
     height: 150px;
     border-radius: 50%;
-
-    
 
     //När knappen klickas på /aktiveras 
     &:active {
       background-color: $bgColorHoverCompareBtn;
       font-weight: $fontWeightHoverComparementBtn;
       box-shadow: $BoxShadowHoverComparementBtn;
-    }
+    
+  }
+
   }
   //För att se till så att span fortsötter att vara grön
-  #comparementContainer span {
+  span {
     color:rgb(10, 233, 10)
   }
 
@@ -158,17 +151,15 @@ body {
     margin-top: 25px;
 
     p{
-  
       font-weight: $fontWeightComparementP;
       margin: 10px;
     }
   }
+
   img {
-    border-radius: 50%;
-    background-color: #ffcb05;
     margin-bottom: 25px;
   }
-}
+
 #fightWrapper{
   background-color: #5a5850;
   display: flex;
@@ -187,16 +178,6 @@ body {
     background-color: #eb5845;
   
   }
-}
-#fightBtnWrapper{
-background-color: orange;
-display: flex;
-flex-direction: column;
-flex-wrap: nowrap;
-justify-content: center;
-align-items: center;
-align-content: center;
-
 }
 
 
