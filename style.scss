@@ -1,12 +1,13 @@
 //Variabler
 //Colors
 $backroundColor: #3c5aa6;
-$headerFontColor: #ffcb05;
+$rubrikFontColor: #ffcb05;
 $BGDropDownMenu: #4574eb;
 $BGColorHoverDropDownMenu: #356af1;
 $bgColorCompareBtn: #ffcd05a1;
 $bgColorHoverCompareBtn: #ffcb05;
 $bgColorComparementDiv: #4574eb;
+$bgColofightMessageContainer: #ffcb05;
 
 //Box Shadow drop down lista
 $BoxShadowHoverMenu: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -55,11 +56,13 @@ body {
   align-items: center;
   align-content: center;
 
-  h1 {
-    color: $headerFontColor;
+  //Rubrik Pokemon Application 
+  #rubrik {
+    color: $rubrikFontColor;
     font-size: $fontSizeHeader;
     text-align: center;
     margin-bottom: 3rem;
+    font-family: $fontfamilyPressStart;
   }
 
   //ContainerWrapper wrappar containerDropDown1 , containerDropDown2 och comparementContainer
@@ -78,7 +81,10 @@ body {
 
 #containerDropDown1,
 #containerDropDown2 {
+  max-width: 50%;
   margin: 0 10px;
+  padding:0;
+  
   //Dropdownlistan
   #pokemon1,
   #pokemon2 {
@@ -89,6 +95,8 @@ body {
     border: none;
     border-radius: $borderRadiusDropDown;
     cursor: pointer;
+    border: solid 2px #ffcb05;
+    
 
     &:hover {
       background-color: $BGColorHoverDropDownMenu;
@@ -100,7 +108,13 @@ body {
     background-color: #4574eb;
     border-radius: $borderRadiusSelectedPokemon;
 
+    
+    h2{
+      padding: 10px;
+    }
+
     ul {
+      padding-left:2;
       list-style-type: none;
     }
   }
@@ -147,23 +161,74 @@ span {
   }
 }
 
-img {
-  margin-bottom: 25px;
-}
+// img {
+//   // margin-bottom: 25px;
+// }
 
 #fightWrapper {
+
   // background-color: #5a5850;
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-  align-content: center;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	align-content: stretch;
 
-  #fightP1Container {
-    background-color: #4574eb;
-  }
-  #fightP2Container {
-    background-color: #eb5845;
-  }
+  // #fightP1Container {
+  //   background-color: #4574eb;
+  // }
+  // #fightP2Container {
+  //   background-color: #eb5845;
+  // }
 }
+// // Progressbar
+// #progress-bar {
+//   width: 100%;
+//   background-color: #f3f3f3;
+//   border-radius: 5px;
+//   margin-bottom: 10px; /* Justera efter behov */
+// }
+
+// #progress-bar div {
+//   height: 20px;
+//   background-color: #ffcb05; /* Använd din headerFontColor eller annan passande färg */
+//   width: 0; /* Startbredd, den kommer att öka när den uppdateras */
+//   border-radius: 5px;
+//   transition: width 0.5s ease; /* Övergångseffekt för smidig förändring */
+// }
+
+
+#fightMessageContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center ;
+background-color: $bgColofightMessageContainer;
+
+border-radius: 5px;
+max-width: 50%;
+padding-left: 12px;
+padding-right: 12px;
+box-shadow: $BoxShadowHoverComparementBtn;
+
+
+
+#fightH1 {
+  text-align: center;
+  font-family: $fontfamilyPressStart;
+  color:white ;
+}
+p{
+  text-align: center;
+  padding: 0;
+}
+img{
+  margin-top: 5px;
+  background-color: #ffe065;
+  border-radius: 50%;
+}
+}
+
+

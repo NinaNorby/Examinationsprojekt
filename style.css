@@ -18,11 +18,12 @@ body {
   align-items: center;
   align-content: center;
 }
-body h1 {
+body #rubrik {
   color: #ffcb05;
   font-size: 2rem;
   text-align: center;
   margin-bottom: 3rem;
+  font-family: "Press Start 2P", system-ui;
 }
 body #containerWrapper {
   box-sizing: border-box;
@@ -36,7 +37,9 @@ body #containerWrapper {
 
 #containerDropDown1,
 #containerDropDown2 {
+  max-width: 50%;
   margin: 0 10px;
+  padding: 0;
 }
 #containerDropDown1 #pokemon1,
 #containerDropDown1 #pokemon2,
@@ -49,6 +52,7 @@ body #containerWrapper {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  border: solid 2px #ffcb05;
 }
 #containerDropDown1 #pokemon1:hover,
 #containerDropDown1 #pokemon2:hover,
@@ -64,10 +68,17 @@ body #containerWrapper {
   background-color: #4574eb;
   border-radius: 4px;
 }
+#containerDropDown1 #selectedPokemon1 h2,
+#containerDropDown1 #selectedPokemon2 h2,
+#containerDropDown2 #selectedPokemon1 h2,
+#containerDropDown2 #selectedPokemon2 h2 {
+  padding: 10px;
+}
 #containerDropDown1 #selectedPokemon1 ul,
 #containerDropDown1 #selectedPokemon2 ul,
 #containerDropDown2 #selectedPokemon1 ul,
 #containerDropDown2 #selectedPokemon2 ul {
+  padding-left: 2;
   list-style-type: none;
 }
 
@@ -109,21 +120,39 @@ span {
   margin: 10px;
 }
 
-img {
-  margin-bottom: 25px;
-}
-
 #fightWrapper {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  align-content: center;
+  align-content: stretch;
 }
-#fightWrapper #fightP1Container {
-  background-color: #4574eb;
+
+#fightMessageContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  background-color: #ffcb05;
+  border-radius: 5px;
+  max-width: 50%;
+  padding-left: 12px;
+  padding-right: 12px;
+  box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-#fightWrapper #fightP2Container {
-  background-color: #eb5845;
+#fightMessageContainer #fightH1 {
+  text-align: center;
+  font-family: "Press Start 2P", system-ui;
+  color: white;
+}
+#fightMessageContainer p {
+  text-align: center;
+  padding: 0;
+}
+#fightMessageContainer img {
+  margin-top: 5px;
+  background-color: #ffe065;
+  border-radius: 50%;
 }/*# sourceMappingURL=style.css.map */

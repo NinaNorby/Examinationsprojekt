@@ -1,5 +1,5 @@
 const pokemonDropDown = document.getElementById('pokemonDropDown');
-// const pokemonDataContainer = document.getElementById('pokemonData');
+
 
 // Klassdefinition 
 class Pokemon {
@@ -220,16 +220,21 @@ new PokemonCreator().createPokemonList().then(pokemonList => {
     }
 
     // Hämtar wrapperDiv från DOM
-    let wrapperDiv = document.getElementById("containerWrapper");
+    let containerWrapper = document.getElementById("containerWrapper");
 
     // Lägger till containerdropdown1 som är barn till wrapperDiv
-    wrapperDiv.appendChild(containerDropDown1);
+    containerWrapper.appendChild(containerDropDown1);
 
     // Lägger till comparementContainer som också är barn till wrapperDiv
-    wrapperDiv.appendChild(comparementContainer);
+    containerWrapper.appendChild(comparementContainer);
 
     // Lägger till containerdropdown2 som också är barn till wrapperDiv
-    wrapperDiv.appendChild(containerDropDown2);
+    containerWrapper.appendChild(containerDropDown2);
+
+
+
+
+
 
     // Skapar eventlistnerer  för när användaren gör val i drop down 1, change används då det är en drop down lista/rullgardin
     selectList1.addEventListener('change', () => {
@@ -309,64 +314,127 @@ new PokemonCreator().createPokemonList().then(pokemonList => {
         const selectedPokemon1 = pokemonList.getPokemonFromList(selectedPokemon1Name);
         const selectedPokemon2 = pokemonList.getPokemonFromList(selectedPokemon2Name);
 
+
         if (selectedPokemon1 && selectedPokemon2) {
+
+            // resetFight();
+//lägger till en h1 i fightmessage 
+        const fightH1 = document.createElement('h1');
+        fightH1.id ="fightH1";
+        fightH1.textContent = 'Pokemon Fight!';
+        document.getElementById('fightMessage').appendChild(fightH1);
             startFight(selectedPokemon1, selectedPokemon2);
         }
+
     });
 
+    // function resetFight(){
+    //     const fightMessageContainer = document.getElementById("fightMessageContainer")
+    //     fightMessageContainer.innerHTML = '';
 
+    //     const comparementstats = document.getElementById("comparementstats");
+    //     comparementstats.innerHTML = '';
+        
+    
+    // Funktion för att skriva in hur det går i kampen , texten kommer att läggas in i fightMessageContainer 
+    function updateFightMessage(attackingPokemon, defendingPokemon, damage) {
+        // Lägger till en <p> i fightmessageContainer 
+        const paragraph = document.createElement('p');
 
+        // skapar en sträng som skriver ut en attack . vem som använde vad  
+        const message = `${attackingPokemon.name} used ${attackingPokemon.primaryAttack} and did ${damage} in damage. \n${defendingPokemon.name + "s"} remaining HP is : ${defendingPokemon.stats.hp}.`;
 
-// Funktion för att skriva in hur det går i kampen , texten kommer att läggas in i fightMessageContainer 
-function updateFightMessage(attackingPokemon, defendingPokemon, damage) {
-    // Lägger till en <p> i fightmessageContainer 
-    const paragraph = document.createElement('p');
+        // Sätter texten i paragraph till message 
+        paragraph.textContent = message;
 
-    // skapar en sträng som skriver ut en attack . vem som använde vad  
-    const message = `${attackingPokemon.name} used ${attackingPokemon.primaryAttack} and did ${damage} in damage. ${defendingPokemon.name +"s"} remaining HP is : ${defendingPokemon.stats.hp}.`;
+        // Hämtar container för meddelande
+        const fightMessageContainer = document.getElementById('fightMessageContainer');
 
-    // Sätter texten i paragraph till message 
-    paragraph.textContent = message;
+        // appendar paragraph elementet i container för meddelandet
+        fightMessageContainer.appendChild(paragraph);
+    }
 
-    // Hämtar container för meddelande
-    const fightMessageContainer = document.getElementById('fightMessageContainer');
-
-    // appendar paragraph elementet i container för meddelandet
-    fightMessageContainer.appendChild(paragraph);
-}
-
-// logiken för fight
-function startFight(pokemon1, pokemon2) {
-    let turnController = new FightTurns(pokemon1, pokemon2);
-
-    // Sätter en interval på var 10e sekund
-    let fightInterval = setInterval(() => {
-        if (pokemon1.stats.hp > 0 && pokemon2.stats.hp > 0) {
-            let attackingPokemon = turnController.whoIsAttacking();
-            let defendingPokemon = turnController.whoIsDefending();
-
-            let damage = attackingPokemon.getAttack() - defendingPokemon.getDefence() * 0.8;
-            if (damage < 10) {
-                damage = 10;
+    // logiken för fight
+    function startFight(pokemon1, pokemon2) {
+        let turnController = new FightTurns(pokemon1, pokemon2);
+    
+        // // Skapa HP-progressbarer för båda Pokemon och lagra dem i variabler
+        // let fightP1ProgressBar = CreateProgressBar(fightP1Container, pokemon1.stats.maxHP, '1', pokemon1.stats.hp);
+        // let fightP2ProgressBar = CreateProgressBar(fightP2Container, pokemon2.stats.maxHP, '2', pokemon2.stats.hp);
+    
+        // Sätter en interval på var 10e sekund
+        let fightInterval = setInterval(() => {
+            if (pokemon1.stats.hp > 0 && pokemon2.stats.hp > 0) {
+                let attackingPokemon = turnController.whoIsAttacking();
+                let defendingPokemon = turnController.whoIsDefending();
+    
+                let damage = attackingPokemon.getAttack() - defendingPokemon.getDefence() * 0.8;
+                if (damage < 10) {
+                    damage = 10;
+                }
+                defendingPokemon.takeDamage(damage);
+    
+                // Uppdaterar meddelandet om kampen/fighten 
+                updateFightMessage(attackingPokemon, defendingPokemon, damage);
+    
+                if (defendingPokemon.stats.hp === 0) {
+                    let fightMessageElement = document.getElementById("fightMessage");
+                    let paragraph1 = document.createElement('p');
+                    paragraph1.textContent = `${defendingPokemon.name} is defeated!`;
+                    fightMessageElement.appendChild(paragraph1);
+                    
+                    let paragraph2 = document.createElement('p');
+                    paragraph2.innerHTML = `<strong>${attackingPokemon.name} wins!<strong> <br> <img src="${attackingPokemon.image}" alt="${attackingPokemon.name}">`;
+                    fightMessageElement.appendChild(paragraph2);
+                    
+                    clearInterval(fightInterval); // Stoppar intervallet på 2 sek när striden är över
+                    return;
+                } else {
+                    turnController.changeTurn();
+                }
+    
+                // // Uppdatera HP-progressbarerna
+                // if (defendingPokemon === pokemon1) {
+                //     updateHPProgressBar(fightP1ProgressBar, defendingPokemon.stats.hp, defendingPokemon.stats.maxHP);
+                // } else {
+                //     updateHPProgressBar(fightP2ProgressBar, defendingPokemon.stats.hp, defendingPokemon.stats.maxHP);
+                // }
+                
             }
-            defendingPokemon.takeDamage(damage);
-
-            // Uppdaterar meddelandet om kampen/fighten 
-            updateFightMessage(attackingPokemon, defendingPokemon, damage);
-
-            if (defendingPokemon.stats.hp === 0) {
-                let fightMessageElement = document.getElementById("fightMessage");
-                fightMessageElement.innerHTML = `${defendingPokemon.name} is defeated!<br><strong>${attackingPokemon.name} wins!<strong> <br> <img src="${attackingPokemon.image}" alt="${attackingPokemon.name}">`;
-                clearInterval(fightInterval); // Stoppa intervallet på 10 sek när striden är över
-                return;
-            } else {
-                turnController.changeTurn();
-            }
-        }
-    }, 2000); // ÄNDRA TILL 10000
-}
+        }, 4000); 
+    }
 
 
+
+    //Kod till en tilltänkt progressbar men jag begravde den iden efter x anta timmar. Jag fick null som värde till innerProgressBar. 
+
+
+    // function CreateProgressBar(container, maxHP, progressBarSuffix, currentHP) {
+    //     // Skapa HP-progressbaren
+    //     const progressBar = document.createElement('div');
+    //     progressBar.id = 'progress-bar';
+    
+    //     const progressBarInner = document.createElement('div');
+    //     progressBarInner.id = 'progressBarInner' + progressBarSuffix;
+    //     progressBarInner.style.width = (currentHP / maxHP) * 100 + '%';
+    
+    //     // Lägger till inner progressbaren i den yttre progressbaren
+    //     progressBar.appendChild(progressBarInner);
+    
+    //     // Lägger till HP-progressbaren i container
+    //     container.appendChild(progressBar);
+    //     return progressBar;
+    // }
+    
+    // function updateHPProgressBar(container, hp, maxHP) {
+    //     let progressBarInner = container.querySelector
+
+    // ('#progressBarInner'); // den blIr NULL 
+
+    //     let percentage = (hp / maxHP) * 100;
+    //     progressBarInner.style.width = percentage + '%';
+    // }
+    
     //Denna funktion kommer att jämföra 2 pokemon mot varandra . Den pokemons vars värde är bättre än den andras kommer att bli grön. Därefter kommer en vinnare att visas.  
     function comparePokemon(pokemon1, pokemon2) {
 
@@ -401,49 +469,49 @@ function startFight(pokemon1, pokemon2) {
 
     }
 
-
-    //Skapar fightp1container  som är barn till fightWrapper 
-    let fightP1Container = document.createElement('div');
-    fightP1Container.id = "fightP1Container";
-    fightP1Container.innerHTML = "fightP1Container";
-    fightWrapper.appendChild(fightP1Container);
-
-
-    //Lägger en div (text  ska läggas in) som blir barn till fightp1container 
-    let fightP1HP = document.createElement('div');
-    fightP1HP.id = "fightP1HP";
-    fightP1HP.innerHTML = 'fightP1HP'
-    fightP1Container.appendChild(fightP1HP);
-
-
-
-
+    
+    
+    
+    
     //Lägger till en div som ska kunna visa ut hur kampen går 
     let fightMessageContainer = document.createElement('div');
     fightMessageContainer.id = "fightMessageContainer";
-
     fightWrapper.appendChild(fightMessageContainer);
-
+    
     let fightMessage = document.createElement('div');
     fightMessage.id = "fightMessage";
     // fightMessage.innerHTML = '';
     fightMessageContainer.appendChild(fightMessage);
+    
+    
+
+    //Dessa var tänkt till progressbar 
+    
+        // //Skapar fightp1container  som är barn till fightWrapper 
+        // let fightP1Container = document.createElement('div');
+        // fightP1Container.id = "fightP1Container";
+        // fightP1Container.innerHTML = "fightP1Container";
+        // fightWrapper.appendChild(fightP1Container);
+    
+    
+        // //Lägger en div (text  ska läggas in) som blir barn till fightp1container 
+        // let fightP1HP = document.createElement('div');
+        // fightP1HP.id = "fightP1HP";
+        // fightP1HP.innerHTML = '';
+        // fightP1Container.appendChild(fightP1HP);
+
+    // //Skapar fightp2container  som är barn till fightWrapper 
+    // let fightP2Container = document.createElement('div');
+    // fightP2Container.id = "fightP2Container";
+    // fightP2Container.innerHTML = "fightP2Container";
+    // fightWrapper.appendChild(fightP2Container);
 
 
 
-    //Skapar fightp2container  som är barn till fightWrapper 
-    let fightP2Container = document.createElement('div');
-    fightP2Container.id = "fightP2Container";
-    fightP2Container.innerHTML = "fightP2Container";
-    fightWrapper.appendChild(fightP2Container);
-
-
-
-    //Lägger en div (text  ska läggas in) som blir barn till fightp2container 
-    let fightP2HP = document.createElement('div');
-    fightP2HP.id = "fightP2HP";
-    fightP2HP.innerHTML = "fightP2HP";
-    fightP2Container.appendChild(fightP2HP);
-
+    // //Lägger en div (text  ska läggas in) som blir barn till fightp2container 
+    // let fightP2HP = document.createElement('div');
+    // fightP2HP.id = "fightP2HP";
+    // fightP2HP.innerHTML = "";
+    // fightP2Container.appendChild(fightP2HP);
 
 });
