@@ -7,12 +7,16 @@ $BGColorHoverDropDownMenu: #356af1;
 $bgColorCompareBtn: #ffcd05a1;
 $bgColorHoverCompareBtn: #ffcb05;
 $bgColorComparementDiv: #4574eb;
-$bgColofightMessageContainer: #ffcb05;
+$bgColofightMessageMiddle: #4574eb;
+$bgColofightMessageLeftAndRight:#ffcd05a1;
+$bgColorHoverfightMessageLeftAndRight:#ffcb05; //Det längsta variabelnamnet jag någonsin gjort....
 
 //Box Shadow drop down lista
 $BoxShadowHoverMenu: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-//Box Shadow drop down lista
+//Box Shadow compare btn
 $BoxShadowHoverComparementBtn: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+//Box Shadow fightwrapper och dess barn
+$BoxShadowFightElements: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
 //Font Fam.
 $fontfamilyPressStart: "Press Start 2P", system-ui;
@@ -27,6 +31,7 @@ $borderRadiusComparementDiv: 4px;
 $fontSizeDropDownList: 1rem;
 $fontSizeHeader: 2rem;
 $fontSizeComparementBtn: 1rem;
+$fontSizeFightMessageLeftRight:1rem;
 
 $fontWeightComparementBtn: 600;
 $fontWeightComparementP: 600;
@@ -39,24 +44,25 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-
+  overflow-y: auto;
   margin-bottom: 3rem;
 }
 
 body {
-  width: 100%;
-  height: 100vh;
   background-color: $backroundColor;
   font-family: $fontfamilyStandard;
   color: white;
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
   justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   align-content: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align: justify;
 
-  //Rubrik Pokemon Application 
+  //Rubrik Pokemon Application
   #rubrik {
     color: $rubrikFontColor;
     font-size: $fontSizeHeader;
@@ -74,6 +80,8 @@ body {
     justify-content: space-between;
     align-items: center;
     align-content: center;
+    max-width: 100%;
+    max-height: 100%;
   }
 }
 
@@ -81,10 +89,9 @@ body {
 
 #containerDropDown1,
 #containerDropDown2 {
-  max-width: 50%;
   margin: 0 10px;
-  padding:0;
-  
+  padding: 0;
+
   //Dropdownlistan
   #pokemon1,
   #pokemon2 {
@@ -96,35 +103,46 @@ body {
     border-radius: $borderRadiusDropDown;
     cursor: pointer;
     border: solid 2px #ffcb05;
-    
 
     &:hover {
       background-color: $BGColorHoverDropDownMenu;
       box-shadow: $BoxShadowHoverMenu;
     }
   }
+
+ 
   #selectedPokemon1,
   #selectedPokemon2 {
     background-color: #4574eb;
     border-radius: $borderRadiusSelectedPokemon;
 
-    
-    h2{
+    h2 {
       padding: 10px;
     }
 
     ul {
-      padding-left:2;
+      
+      padding-left: 2;
       list-style-type: none;
+   
+      }
     }
   }
-}
+
 
 // container för compartment med knapp samt jämfäörelsedata
 #comparementContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
+
+
+  img {
+    margin-top: 5px;
+    background-color: #ffcd05a1;
+    border-radius: 50%;
+    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
 }
 
 button {
@@ -159,76 +177,98 @@ span {
     font-weight: $fontWeightComparementP;
     margin: 10px;
   }
+
 }
 
-// img {
-//   // margin-bottom: 25px;
-// }
-
+//CSS för fightWrapper och dess barn
 #fightWrapper {
-
-  // background-color: #5a5850;
-  display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: center;
-	align-items: center;
-	align-content: stretch;
-
-  // #fightP1Container {
-  //   background-color: #4574eb;
-  // }
-  // #fightP2Container {
-  //   background-color: #eb5845;
-  // }
-}
-// // Progressbar
-// #progress-bar {
-//   width: 100%;
-//   background-color: #f3f3f3;
-//   border-radius: 5px;
-//   margin-bottom: 10px; /* Justera efter behov */
-// }
-
-// #progress-bar div {
-//   height: 20px;
-//   background-color: #ffcb05; /* Använd din headerFontColor eller annan passande färg */
-//   width: 0; /* Startbredd, den kommer att öka när den uppdateras */
-//   border-radius: 5px;
-//   transition: width 0.5s ease; /* Övergångseffekt för smidig förändring */
-// }
-
-
-#fightMessageContainer{
   display: flex;
   flex-direction: row;
+  flex-wrap: nowrap;
   justify-content: center;
-  flex-wrap: wrap;
-  align-items: center ;
-background-color: $bgColofightMessageContainer;
+  align-items: center;
+  align-content: left;
+  margin-top: 50px;
 
-border-radius: 5px;
-max-width: 50%;
-padding-left: 12px;
-padding-right: 12px;
-box-shadow: $BoxShadowHoverComparementBtn;
+  #fightMessageRight,
+  #fightMessageLeft {
+    background-color:$bgColofightMessageLeftAndRight;
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-align: left; // Ändrad från justify till left
+    max-height: auto;
 
+    border-radius: 5px;
+    padding-left: 12px;
+    padding-right: 12px;
+    max-width: 250px;
 
+    max-height: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    &:hover{
+      background-color:$bgColorHoverfightMessageLeftAndRight;
+    }
+    
+    p {
+      word-wrap: break-word; // word-break: break-all;
+    }
+    #fightH1Left{
+      font-family: $fontfamilyPressStart;
+      font-size: $fontSizeFightMessageLeftRight;
+    }
+    #fightH1Right{
+      font-family: $fontfamilyPressStart;
+      font-size: $fontSizeFightMessageLeftRight;
+    }
 
-#fightH1 {
-  text-align: center;
-  font-family: $fontfamilyPressStart;
-  color:white ;
+  }
+  // Stylar scrollbar för vänster och höger divvarna i fighten 
+
+  // Stylar scrollbar-thumb
+  #fightMessageRight::-webkit-scrollbar-thumb,
+  #fightMessageLeft::-webkit-scrollbar-thumb {
+    background-color:#927605a1;
+    border-radius: 5px; 
+  }
+//  Stylar scrollbar 
+#fightMessageRight::-webkit-scrollbar,
+#fightMessageLeft::-webkit-scrollbar {
+  width: 10px; // Bredden 
+  background-color:#927605a1;
 }
-p{
-  text-align: center;
-  padding: 0;
-}
-img{
-  margin-top: 5px;
-  background-color: #ffe065;
-  border-radius: 50%;
-}
-}
+// Stylar Stylar scrollbar-track
+  #fightMessageRight::-webkit-scrollbar-track,
+  #fightMessageLeft::-webkit-scrollbar-track {
+    width: 10px;
+  }
 
 
+
+  #fightMessageMiddle {
+    background-color:$bgColofightMessageMiddle;
+    font-family: $fontfamilyPressStart;
+    box-shadow: $BoxShadowFightElements;
+    color: white;
+    text-align: center;
+    margin: 0.5rem;
+    max-height: 30rem;
+    border-radius: 5px;
+    padding-left: 12px;
+    padding-right: 12px;
+    max-width: 250px;
+
+
+    p {
+      font-family: $fontfamilyStandard;
+      text-align: center;
+    }
+    img {
+      margin-top: 5px;
+      background-color: #ffcd05a1;
+      border-radius: 50%;
+      box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+  }
+ 
+}

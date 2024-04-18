@@ -11,6 +11,7 @@ class Pokemon {
         this.height = data.height;
         this.stats = {
             hp: data.stats[0].base_stat,
+            maxHP: data.stats[0].base_stat,
             attack: data.stats[1].base_stat,
             specialAttack: data.stats[2].base_stat,
             defense: data.stats[3].base_stat,
@@ -39,6 +40,9 @@ class Pokemon {
         if (this.stats.hp < 0) {
             this.stats.hp = 0; // Sätter HP till 0 om det blir minus
         }
+    }
+    resetHP() {
+        this.stats.hp = this.stats.maxHP;
     }
 }
 
@@ -129,6 +133,115 @@ class PokemonList {
     }
 }
 
+// Funktion för att visa den valda Pokemon
+function displaySelectedPokemon(selectedPokemon, selectedPokemonElement) {
+    selectedPokemonElement.innerHTML = `
+    <h2>${selectedPokemon.name}</h2>
+    <img src="${selectedPokemon.image}" alt="${selectedPokemon.name}">
+    <p>Types: ${selectedPokemon.types.join(', ')}</p>
+    <p>Weight: ${selectedPokemon.weight}</p>
+    <p>Height: ${selectedPokemon.height}</p>
+    <p>Stats:</p>
+    <ul>
+    <li>HP: ${selectedPokemon.stats.hp}</li>
+    <li>Attack: ${selectedPokemon.stats.attack}</li>
+    <li>Special Attack: ${selectedPokemon.stats.specialAttack}</li>
+    <li>Defense: ${selectedPokemon.stats.defense}</li>
+    <li>Special Defense: ${selectedPokemon.stats.specialDefense}</li>
+    <li>Speed: ${selectedPokemon.stats.speed}</li>
+    </ul>
+    <p>Primary Attack: ${selectedPokemon.primaryAttack}</p>
+    `;
+}
+
+//Denna funktion kommer att jämföra 2 pokemon mot varandra . Den pokemons vars värde är bättre än den andras kommer att bli grön. Därefter kommer en vinnare att visas.  
+function comparePokemon(pokemon1, pokemon2) {
+
+    let comparison = ''; // Sätter till en tom sträng till en början 
+
+    // Sätter dessa till 0 till en böörjan 
+    let wins1 = 0;
+    let wins2 = 0;
+
+    //Itererar över alla stats 
+    for (let stat in pokemon1.stats) {
+        comparison += `<p><strong>${stat}:</strong> `; // tstats texten kommer att vara i fet stil 
+        // Den kommer att kolla om pokemon1:s stats är större eller mindre. Om pokemon1 är större kommer den att få grön text. wins kommer att öka med 1 
+        if (pokemon1.stats[stat] > pokemon2.stats[stat]) {
+            comparison += `<br><span style="color:rgb(10, 233, 10)">${pokemon1.name}: ${pokemon1.stats[stat]}</span> vs ${pokemon2.name}: ${pokemon2.stats[stat]}</p>`;
+            wins1++; //ökar wins 
+            //Om pokemon1 stats är minsre kommer pokemon 2 att få poäng 
+        } else if (pokemon1.stats[stat] < pokemon2.stats[stat]) {
+            comparison += `<br>${pokemon1.name}: ${pokemon1.stats[stat]} vs <span style="color:rgb(10, 233, 10)">${pokemon2.name}: ${pokemon2.stats[stat]}</span></p>`;
+            wins2++;
+        } else { // om ingen har högre stats kommer det att visas vit text och ingen får poäng 
+            comparison += `${pokemon1.name}: ${pokemon1.stats[stat]} vs ${pokemon2.name}: ${pokemon2.stats[stat]}</p>`;
+        }
+    }
+    comparementstats.innerHTML = comparison;
+
+    //Om qins 1 är större än wins 2 kommer vinnaren att vara pokemon1 , annars tvärt om 
+    const winner = wins1 > wins2 ? pokemon1 : pokemon2;
+    const comparementContainer = document.getElementById('comparementContainer'); // Jag väljer att lägga vinnaren i min skapade comparecontainer än så länge 
+    //Vinnaren kommer att presenteras med bild samt att textstorleken på pokemonnamnet kommer att vara större 
+    comparementContainer.innerHTML += `<p>The winner is: <br> <span style="color:white; font-size: 20px;">${winner.name}</span></p><img src="${winner.image}" alt="${winner.name}">`;
+
+}
+// logiken för fight
+function startFight(pokemon1, pokemon2) {
+
+    let turnController = new FightTurns(pokemon1, pokemon2);
+
+    // Sätter en interval på var 10e sekund
+    let fightInterval = setInterval(() => {
+        if (pokemon1.stats.hp > 0 && pokemon2.stats.hp > 0) {
+            let attackingPokemon = turnController.whoIsAttacking();
+            let defendingPokemon = turnController.whoIsDefending();
+
+            let damage = attackingPokemon.getAttack() - defendingPokemon.getDefence() * 0.8;
+            if (damage < 10) {
+                damage = 10;
+            }
+            defendingPokemon.takeDamage(damage);
+
+            // Uppdaterar meddelandet om kampen/fighten 
+            // updateFightMessage(attackingPokemon, defendingPokemon, damage);
+            const paragraph = document.createElement('p');
+            const message = `${attackingPokemon.name} used ${attackingPokemon.primaryAttack} and did ${damage} in damage. \n${defendingPokemon.name + "s"} remaining HP is : ${defendingPokemon.stats.hp}.`;
+
+            // Sätter texten i paragraph till message 
+            paragraph.textContent = message;
+
+            // Hämtar container för meddelande
+            if (defendingPokemon.name == pokemon1.name) {
+                const fightMessageRight = document.getElementById('fightMessageRight');
+                fightMessageRight.appendChild(paragraph);
+            }
+            else {
+                const fightMessageLeft = document.getElementById('fightMessageLeft');
+                fightMessageLeft.appendChild(paragraph);
+            }
+
+            if (defendingPokemon.stats.hp === 0) {
+                let fightMessageElement = document.getElementById("fightMessageMiddle");
+                let paragraph1 = document.createElement('p');
+                paragraph1.textContent = `${defendingPokemon.name} is defeated!`;
+                fightMessageElement.appendChild(paragraph1);
+
+                let paragraph2 = document.createElement('p');
+                paragraph2.innerHTML = `<strong>${attackingPokemon.name} wins!<strong> <br> <img src="${attackingPokemon.image}" alt="${attackingPokemon.name}">`;
+                fightMessageElement.appendChild(paragraph2);
+
+                clearInterval(fightInterval); // Stoppar intervallet på 2 sek när striden är över
+                return;
+            } else {
+                turnController.changeTurn();
+            }
+        }
+    }, 2000);
+}
+
+
 new PokemonCreator().createPokemonList().then(pokemonList => {
     //Skapar upp en div container för drop down 1 
     let containerDropDown1 = document.createElement("div");
@@ -167,7 +280,6 @@ new PokemonCreator().createPokemonList().then(pokemonList => {
     comparementBtn.id = "comparementBtn";
     comparementBtn.innerHTML = "Compare your Pokémons";
     comparementContainer.appendChild(comparementBtn)
-
 
     //Skapar en fight knapp  som läggs i comparementC.
     let fightBtn = document.createElement('button');
@@ -232,9 +344,31 @@ new PokemonCreator().createPokemonList().then(pokemonList => {
     containerWrapper.appendChild(containerDropDown2);
 
 
+    //Här kommer data om hur fighten går . Jag skapade 3 st divar. Resultat för pokemon 1 och två kommer att hamna här. Sedan skapas en div som heter fightmesage där en h1 läggs till samt vinnaren att presenteras 
+    let fightWrapper = document.getElementById('fightWrapper');
+
+    let fightMessageLeft = document.createElement('div');
+    fightMessageLeft.id = 'fightMessageLeft';
+    // fightMessageLeft.innerHTML = 'Left';
+    fightWrapper.appendChild(fightMessageLeft);
+
+    let fightMessageMiddle = document.createElement('div');
+    fightMessageMiddle.id = 'fightMessageMiddle';
+    // fightMessageMiddle.innerHTML = 'middle';
+    fightWrapper.appendChild(fightMessageMiddle);
+
+    let fightMessageRight = document.createElement('div');
+    fightMessageRight.id = 'fightMessageRight';
+    // fightMessageRight.innerHTML = 'right';
+    fightWrapper.appendChild(fightMessageRight);
+
+    // Skapar upp selectedPok.1 och 2
+    const selectedPokemon1Element = document.getElementById('selectedPokemon1');
+    const selectedPokemon2Element = document.getElementById('selectedPokemon2');
 
 
 
+    // Deklarerar Events
 
     // Skapar eventlistnerer  för när användaren gör val i drop down 1, change används då det är en drop down lista/rullgardin
     selectList1.addEventListener('change', () => {
@@ -254,36 +388,13 @@ new PokemonCreator().createPokemonList().then(pokemonList => {
         }
     })
 
-    // Skapar upp selectedPok.1 och 2
-    const selectedPokemon1Element = document.getElementById('selectedPokemon1');
-    const selectedPokemon2Element = document.getElementById('selectedPokemon2');
-
-    // Funktion för att visa den valda Pokemon
-    function displaySelectedPokemon(selectedPokemon, selectedPokemonElement) {
-        selectedPokemonElement.innerHTML = `
-        <h2>${selectedPokemon.name}</h2>
-        <img src="${selectedPokemon.image}" alt="${selectedPokemon.name}">
-        <p>Types: ${selectedPokemon.types.join(', ')}</p>
-        <p>Weight: ${selectedPokemon.weight}</p>
-        <p>Height: ${selectedPokemon.height}</p>
-        <p>Stats:</p>
-        <ul>
-        <li>HP: ${selectedPokemon.stats.hp}</li>
-        <li>Attack: ${selectedPokemon.stats.attack}</li>
-        <li>Special Attack: ${selectedPokemon.stats.specialAttack}</li>
-        <li>Defense: ${selectedPokemon.stats.defense}</li>
-        <li>Special Defense: ${selectedPokemon.stats.specialDefense}</li>
-        <li>Speed: ${selectedPokemon.stats.speed}</li>
-        </ul>
-        <p>Primary Attack: ${selectedPokemon.primaryAttack}</p>
-    `;
-    }
-
     // eventlist. för knappen comparementBtn 
     comparementBtn.addEventListener("click", () => {
+
+
+
         const selectedPokemonName1 = selectList1.value; // selectedPokemonName1 kommer att få värdet av användarens val 
         const selectedPokemonName2 = selectList2.value;
-
 
         //Förhindrar att man kan gå  vidare utan att göra ett val 
         if (!selectedPokemonName1 || !selectedPokemonName2) {
@@ -292,17 +403,30 @@ new PokemonCreator().createPokemonList().then(pokemonList => {
             return;
         }
 
+        //Förhindrar att man kan gå  vidare om man väljes samma pokemon name. Medveten att det skulle vara bättre att gå på ID 
+        if (selectedPokemonName1 === selectedPokemonName2) {
+            let errorMessage = 'Please select two different Pokémon to compare.';
+            alert(errorMessage);
+            return;
+        }
+
         const selectedPokemon1 = pokemonList.getPokemonFromList(selectedPokemonName1);
         const selectedPokemon2 = pokemonList.getPokemonFromList(selectedPokemonName2);
 
+        //Om två olika Pokemons har valts, hämtas dessa Pokémon från listan  
         if (selectedPokemon1 && selectedPokemon2) {
             comparePokemon(selectedPokemon1, selectedPokemon2);
 
         }
+        // Scrollar  till comparementstats
+        document.getElementById('comparementstats').scrollIntoView({ behavior: 'smooth' })
 
     });
 
+
+    //Eventlyssnare för fightBtn
     document.getElementById("fightBtn").addEventListener("click", () => {
+
         const selectedPokemon1Name = document.getElementById("pokemon1").value;
         const selectedPokemon2Name = document.getElementById("pokemon2").value;
 
@@ -311,207 +435,45 @@ new PokemonCreator().createPokemonList().then(pokemonList => {
             return;
         }
 
+        if (selectedPokemon1Name === selectedPokemon2Name) {
+            let errorMessage = 'Please select two different Pokémon to fight.';
+            alert(errorMessage);
+            return;
+        }
+        //Raderar all Html 
+        document.getElementById('fightMessageLeft').innerHTML = '';
+        document.getElementById('fightMessageMiddle').innerHTML = '';
+        document.getElementById('fightMessageRight').innerHTML = '';
+
         const selectedPokemon1 = pokemonList.getPokemonFromList(selectedPokemon1Name);
         const selectedPokemon2 = pokemonList.getPokemonFromList(selectedPokemon2Name);
 
+        //lägger till en h1 i fightmessage 
+        const fightH1Middle = document.createElement('h1');
+        fightH1Middle.id = "fightH1Middle";
+        fightH1Middle.textContent = 'Pokemon Fight!';
+        document.getElementById('fightMessageMiddle').appendChild(fightH1Middle);
 
-        if (selectedPokemon1 && selectedPokemon2) {
+        const fightH1Left = document.createElement('h1');
+        fightH1Left.id = 'fightH1Left';
+        fightH1Left.textContent = 'Challenger';
+        document.getElementById('fightMessageLeft').appendChild(fightH1Left);
 
-            // resetFight();
-//lägger till en h1 i fightmessage 
-        const fightH1 = document.createElement('h1');
-        fightH1.id ="fightH1";
-        fightH1.textContent = 'Pokemon Fight!';
-        document.getElementById('fightMessage').appendChild(fightH1);
-            startFight(selectedPokemon1, selectedPokemon2);
-        }
+
+        const fightH1Right = document.createElement('h1');
+        fightH1Right.id = 'fightH1Right';
+        fightH1Right.textContent = 'Challenger';
+        document.getElementById('fightMessageRight').appendChild(fightH1Right);
+
+        startFight(selectedPokemon1, selectedPokemon2);
+
+        // Resettar HP på Pokemons för att man ska kunna köra fighterna flera gånger  metoden ligger i pokemonklassen  
+        selectedPokemon1.resetHP();
+        selectedPokemon2.resetHP();
+
+        // Scrollar  till fightWrapper
+        document.getElementById('fightWrapper').scrollIntoView({ behavior: 'smooth' })
 
     });
-
-    // function resetFight(){
-    //     const fightMessageContainer = document.getElementById("fightMessageContainer")
-    //     fightMessageContainer.innerHTML = '';
-
-    //     const comparementstats = document.getElementById("comparementstats");
-    //     comparementstats.innerHTML = '';
-        
-    
-    // Funktion för att skriva in hur det går i kampen , texten kommer att läggas in i fightMessageContainer 
-    function updateFightMessage(attackingPokemon, defendingPokemon, damage) {
-        // Lägger till en <p> i fightmessageContainer 
-        const paragraph = document.createElement('p');
-
-        // skapar en sträng som skriver ut en attack . vem som använde vad  
-        const message = `${attackingPokemon.name} used ${attackingPokemon.primaryAttack} and did ${damage} in damage. \n${defendingPokemon.name + "s"} remaining HP is : ${defendingPokemon.stats.hp}.`;
-
-        // Sätter texten i paragraph till message 
-        paragraph.textContent = message;
-
-        // Hämtar container för meddelande
-        const fightMessageContainer = document.getElementById('fightMessageContainer');
-
-        // appendar paragraph elementet i container för meddelandet
-        fightMessageContainer.appendChild(paragraph);
-    }
-
-    // logiken för fight
-    function startFight(pokemon1, pokemon2) {
-        let turnController = new FightTurns(pokemon1, pokemon2);
-    
-        // // Skapa HP-progressbarer för båda Pokemon och lagra dem i variabler
-        // let fightP1ProgressBar = CreateProgressBar(fightP1Container, pokemon1.stats.maxHP, '1', pokemon1.stats.hp);
-        // let fightP2ProgressBar = CreateProgressBar(fightP2Container, pokemon2.stats.maxHP, '2', pokemon2.stats.hp);
-    
-        // Sätter en interval på var 10e sekund
-        let fightInterval = setInterval(() => {
-            if (pokemon1.stats.hp > 0 && pokemon2.stats.hp > 0) {
-                let attackingPokemon = turnController.whoIsAttacking();
-                let defendingPokemon = turnController.whoIsDefending();
-    
-                let damage = attackingPokemon.getAttack() - defendingPokemon.getDefence() * 0.8;
-                if (damage < 10) {
-                    damage = 10;
-                }
-                defendingPokemon.takeDamage(damage);
-    
-                // Uppdaterar meddelandet om kampen/fighten 
-                updateFightMessage(attackingPokemon, defendingPokemon, damage);
-    
-                if (defendingPokemon.stats.hp === 0) {
-                    let fightMessageElement = document.getElementById("fightMessage");
-                    let paragraph1 = document.createElement('p');
-                    paragraph1.textContent = `${defendingPokemon.name} is defeated!`;
-                    fightMessageElement.appendChild(paragraph1);
-                    
-                    let paragraph2 = document.createElement('p');
-                    paragraph2.innerHTML = `<strong>${attackingPokemon.name} wins!<strong> <br> <img src="${attackingPokemon.image}" alt="${attackingPokemon.name}">`;
-                    fightMessageElement.appendChild(paragraph2);
-                    
-                    clearInterval(fightInterval); // Stoppar intervallet på 2 sek när striden är över
-                    return;
-                } else {
-                    turnController.changeTurn();
-                }
-    
-                // // Uppdatera HP-progressbarerna
-                // if (defendingPokemon === pokemon1) {
-                //     updateHPProgressBar(fightP1ProgressBar, defendingPokemon.stats.hp, defendingPokemon.stats.maxHP);
-                // } else {
-                //     updateHPProgressBar(fightP2ProgressBar, defendingPokemon.stats.hp, defendingPokemon.stats.maxHP);
-                // }
-                
-            }
-        }, 4000); 
-    }
-
-
-
-    //Kod till en tilltänkt progressbar men jag begravde den iden efter x anta timmar. Jag fick null som värde till innerProgressBar. 
-
-
-    // function CreateProgressBar(container, maxHP, progressBarSuffix, currentHP) {
-    //     // Skapa HP-progressbaren
-    //     const progressBar = document.createElement('div');
-    //     progressBar.id = 'progress-bar';
-    
-    //     const progressBarInner = document.createElement('div');
-    //     progressBarInner.id = 'progressBarInner' + progressBarSuffix;
-    //     progressBarInner.style.width = (currentHP / maxHP) * 100 + '%';
-    
-    //     // Lägger till inner progressbaren i den yttre progressbaren
-    //     progressBar.appendChild(progressBarInner);
-    
-    //     // Lägger till HP-progressbaren i container
-    //     container.appendChild(progressBar);
-    //     return progressBar;
-    // }
-    
-    // function updateHPProgressBar(container, hp, maxHP) {
-    //     let progressBarInner = container.querySelector
-
-    // ('#progressBarInner'); // den blIr NULL 
-
-    //     let percentage = (hp / maxHP) * 100;
-    //     progressBarInner.style.width = percentage + '%';
-    // }
-    
-    //Denna funktion kommer att jämföra 2 pokemon mot varandra . Den pokemons vars värde är bättre än den andras kommer att bli grön. Därefter kommer en vinnare att visas.  
-    function comparePokemon(pokemon1, pokemon2) {
-
-        let comparison = ''; // Sätter till en tom sträng till en början 
-
-        // Sätter dessa till 0 till en böörjan 
-        let wins1 = 0;
-        let wins2 = 0;
-
-        //Itererar över alla stats 
-        for (let stat in pokemon1.stats) {
-            comparison += `<p><strong>${stat}:</strong> `; // tstats texten kommer att vara i fet stil 
-            // Den kommer att kolla om pokemon1:s stats är större eller mindre. Om pokemon1 är större kommer den att få grön text. wins kommer att öka med 1 
-            if (pokemon1.stats[stat] > pokemon2.stats[stat]) {
-                comparison += `<br><span style="color:rgb(10, 233, 10)">${pokemon1.name}: ${pokemon1.stats[stat]}</span> vs ${pokemon2.name}: ${pokemon2.stats[stat]}</p>`;
-                wins1++; //ökar wins 
-                //Om pokemon1 stats är minsre kommer pokemon 2 att få poäng 
-            } else if (pokemon1.stats[stat] < pokemon2.stats[stat]) {
-                comparison += `<br>${pokemon1.name}: ${pokemon1.stats[stat]} vs <span style="color:rgb(10, 233, 10)">${pokemon2.name}: ${pokemon2.stats[stat]}</span></p>`;
-                wins2++;
-            } else { // om ingen har högre stats kommer det att visas vit text och ingen får poäng 
-                comparison += `${pokemon1.name}: ${pokemon1.stats[stat]} vs ${pokemon2.name}: ${pokemon2.stats[stat]}</p>`;
-            }
-        }
-        comparementstats.innerHTML = comparison;
-
-        //Om qins 1 är större än wins 2 kommer vinnaren att vara pokemon1 , annars tvärt om 
-        const winner = wins1 > wins2 ? pokemon1 : pokemon2;
-        const comparementContainer = document.getElementById('comparementContainer'); // Jag väljer att lägga vinnaren i min skapade comparecontainer än så länge 
-        //Vinnaren kommer att presenteras med bild samt att textstorleken på pokemonnamnet kommer att vara större 
-        comparementContainer.innerHTML += `<p>The winner is: <br> <span style="color:white; font-size: 20px;">${winner.name}</span></p><img src="${winner.image}" alt="${winner.name}">`;
-
-    }
-
-    
-    
-    
-    
-    //Lägger till en div som ska kunna visa ut hur kampen går 
-    let fightMessageContainer = document.createElement('div');
-    fightMessageContainer.id = "fightMessageContainer";
-    fightWrapper.appendChild(fightMessageContainer);
-    
-    let fightMessage = document.createElement('div');
-    fightMessage.id = "fightMessage";
-    // fightMessage.innerHTML = '';
-    fightMessageContainer.appendChild(fightMessage);
-    
-    
-
-    //Dessa var tänkt till progressbar 
-    
-        // //Skapar fightp1container  som är barn till fightWrapper 
-        // let fightP1Container = document.createElement('div');
-        // fightP1Container.id = "fightP1Container";
-        // fightP1Container.innerHTML = "fightP1Container";
-        // fightWrapper.appendChild(fightP1Container);
-    
-    
-        // //Lägger en div (text  ska läggas in) som blir barn till fightp1container 
-        // let fightP1HP = document.createElement('div');
-        // fightP1HP.id = "fightP1HP";
-        // fightP1HP.innerHTML = '';
-        // fightP1Container.appendChild(fightP1HP);
-
-    // //Skapar fightp2container  som är barn till fightWrapper 
-    // let fightP2Container = document.createElement('div');
-    // fightP2Container.id = "fightP2Container";
-    // fightP2Container.innerHTML = "fightP2Container";
-    // fightWrapper.appendChild(fightP2Container);
-
-
-
-    // //Lägger en div (text  ska läggas in) som blir barn till fightp2container 
-    // let fightP2HP = document.createElement('div');
-    // fightP2HP.id = "fightP2HP";
-    // fightP2HP.innerHTML = "";
-    // fightP2Container.appendChild(fightP2HP);
 
 });
