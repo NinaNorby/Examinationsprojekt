@@ -457,13 +457,13 @@ new PokemonCreator().createPokemonList().then(pokemonList => {
 
         const fightH1Left = document.createElement('h1');
         fightH1Left.id = 'fightH1Left';
-        fightH1Left.textContent = 'Challenger';
+        fightH1Left.textContent = 'Challenger #1';
         document.getElementById('fightMessageLeft').appendChild(fightH1Left);
 
 
         const fightH1Right = document.createElement('h1');
         fightH1Right.id = 'fightH1Right';
-        fightH1Right.textContent = 'Challenger';
+        fightH1Right.textContent = 'Challenger #2';
         document.getElementById('fightMessageRight').appendChild(fightH1Right);
 
         startFight(selectedPokemon1, selectedPokemon2);
