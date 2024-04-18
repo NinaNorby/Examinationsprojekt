@@ -176,6 +176,10 @@ span {
   background-color: rgba(146, 118, 5, 0.631372549);
   border-radius: 5px;
 }
+#fightWrapper #fightMessageRight::-webkit-scrollbar-thumb:hover,
+#fightWrapper #fightMessageLeft::-webkit-scrollbar-thumb:hover {
+  cursor: pointer;
+}
 #fightWrapper #fightMessageRight::-webkit-scrollbar,
 #fightWrapper #fightMessageLeft::-webkit-scrollbar {
   width: 10px;

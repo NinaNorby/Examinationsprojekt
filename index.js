@@ -391,8 +391,6 @@ new PokemonCreator().createPokemonList().then(pokemonList => {
     // eventlist. för knappen comparementBtn 
     comparementBtn.addEventListener("click", () => {
 
-
-
         const selectedPokemonName1 = selectList1.value; // selectedPokemonName1 kommer att få värdet av användarens val 
         const selectedPokemonName2 = selectList2.value;
 
@@ -416,6 +414,7 @@ new PokemonCreator().createPokemonList().then(pokemonList => {
         //Om två olika Pokemons har valts, hämtas dessa Pokémon från listan  
         if (selectedPokemon1 && selectedPokemon2) {
             comparePokemon(selectedPokemon1, selectedPokemon2);
+            
 
         }
         // Scrollar  till comparementstats

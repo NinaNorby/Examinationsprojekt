@@ -230,6 +230,9 @@ span {
   #fightMessageLeft::-webkit-scrollbar-thumb {
     background-color:#927605a1;
     border-radius: 5px; 
+    &:hover{
+      cursor: pointer;
+    }
   }
 //  Stylar scrollbar 
 #fightMessageRight::-webkit-scrollbar,
